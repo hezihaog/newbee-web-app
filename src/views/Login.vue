@@ -113,7 +113,7 @@
                     //保存Token到本地
                     setLocal('token', data.token);
                     //保存用户信息到本地
-                    setLocal('user', data);
+                    setLocal('user', JSON.stringify(data));
                     //登录成功，跳转到首页
                     window.location.href = '/';
                 } else {

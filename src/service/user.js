@@ -3,8 +3,12 @@ import axios from '../utils/axios'
 /**
  * 获取用户信息
  */
-export function getUserInfo(params) {
-    return axios.get('/user/getUserInfo', params);
+export function getUserInfo(userId) {
+    return axios.get('/user/getUserInfo', {
+        params: {
+            userId
+        }
+    });
 }
 
 /**

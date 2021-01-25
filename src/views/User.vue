@@ -1,7 +1,7 @@
 <template>
     <div class="user-box">
         <s-header :title="'我的'"></s-header>
-        <div class="user-info">
+        <div class="user-info" @click="clickUserInfo">
             <div class="info">
                 <img src="//s.weituibao.com/1583583975067/user-graduate%20(1).png"/>
                 <div class="user-desc">
@@ -33,14 +33,17 @@
 </template>
 
 <script>
+    import navBar from '@/components/NavBar'
     import sHeader from '@/components/SimpleHeader'
     import {getUserInfo} from "../service/user";
     //本地存储
     import {getLocal} from '@/common/js/utils'
+    import {Toast} from "vant";
 
     export default {
         name: 'User',
         components: {
+            navBar,
             sHeader
         },
         data() {
@@ -49,18 +52,25 @@
                 user: {}
             }
         },
+        methods: {
+            clickUserInfo() {
+                //如果未登录，则跳转去登录页面
+                let userInfo = getLocal('user');
+                if (!userInfo) {
+                    this.$router.push({path: '/login'});
+                }
+            }
+        },
         async mounted() {
             //从本地获取用户信息
             let userInfo = getLocal('user');
-            if (userInfo) {
-                const {data} = await getUserInfo({
-                    userId: ''
-                });
-                this.user = data
-            } else {
-                //没有获取到，跳转去登录
-                window.vRouter.push({path: '/login'})
+            if (!userInfo) {
+                Toast.success("未登录");
+                return
             }
+            console.log(`userInfo.id：${userInfo.id}`);
+            const {data} = await getUserInfo(userInfo.id);
+            this.user = data;
         }
     }
 </script>

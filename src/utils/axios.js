@@ -1,3 +1,4 @@
+import router from '../router'
 import axios from 'axios'
 import {Toast} from 'vant'
 
@@ -16,13 +17,13 @@ axios.interceptors.response.use(res => {
         Toast.fail('服务端异常！');
         return Promise.reject(res)
     }
-    console.log(`当前请求的响应json：${JSON.stringify(res)}`);
-    if (res.code != 0) {
+    console.log(`当前请求的响应json：${JSON.stringify(res.data)}`);
+    if (!res.data || res.data.code != 0) {
         if (res.message) Toast.fail(res.data.message);
-        if (res.code == 416) {
+        if (res.data.code == 416) {
             //返回 416 代表没有登录状态，路由跳转到/login 页面（目前还为创建组件），这里的 window.vRouter 是在
             //main.js 里面设置好的 window.vRouter = router
-            window.vRouter.push({path: '/login'})
+            router.push({path: '/login'})
         }
         return Promise.reject(res.data)
     }
